@@ -79,12 +79,9 @@
         }
 
         .play-animation .layer.specchi,
+        .play-animation .layer.van,
         .play-animation .layer.mic {
             animation: fadeElements 10s infinite linear forwards;
-        }
-
-        .play-animation .layer.van {
-            animation: fadeVan 10s infinite linear forwards;
         }
 
         .play-animation .layer.domanda {
@@ -128,7 +125,7 @@
             100% { opacity: 0; }
         }
 
-        /* 3. Fade in Specchi e Mic (3s - 4s) */
+        /* 3. Fade in Specchi, Van e Mic (3s - 4s) */
         @keyframes fadeElements {
             0% { opacity: 0; }
             30% { opacity: 0; }
@@ -136,15 +133,7 @@
             100% { opacity: 1; }
         }
 
-        /* 4. Il Van entra solo alla fine (8s - 9s) */
-        @keyframes fadeVan {
-            0% { opacity: 0; }
-            80% { opacity: 0; }
-            90% { opacity: 1; }
-            100% { opacity: 1; }
-        }
-
-        /* 5. Domanda */
+        /* 4. Domanda */
         @keyframes fadeDomanda {
             0% { opacity: 0; }
             40% { opacity: 0; }
@@ -158,7 +147,7 @@
             100% { opacity: 0; }
         }
 
-        /* 6. Cross-fade Arya */
+        /* 5. Cross-fade Arya */
         @keyframes fadeArya {
             0% { opacity: 0; }
             55% { opacity: 0; }
@@ -166,7 +155,7 @@
             100% { opacity: 1; }
         }
 
-        /* 7. Unlocked */
+        /* 6. Unlocked */
         @keyframes flickerUnlocked {
             0% { opacity: 0; }
             70% { opacity: 0; }
