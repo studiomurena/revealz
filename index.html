@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reel Animation (9:16)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0b0f;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container con proporzioni 9:16 per Instagram Stories/Reels */
+        .reel-viewport {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            aspect-ratio: 9 / 16;
+            max-width: calc(100vh * 9 / 16);
+            background-color: #000000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        /* Stile comune per tutti i layer grafici */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Assicura il riempimento perfetto del frame 9:16 */
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Il background rimane sempre visibile al 100% */
+        .layer.background {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        /* Definizione dei Z-Index dei livelli */
+        .layer.barra { z-index: 10; }
+        .layer.identity-encrypted { z-index: 11; }
+        .layer.clues { z-index: 12; }
+        .layer.sagoma { z-index: 20; }
+        .layer.arya { z-index: 21; }
+        .layer.specchi { z-index: 30; }
+        .layer.van { z-index: 31; }
+        .layer.mic { z-index: 32; }
+        .layer.domanda { z-index: 40; }
+        .layer.unlocked { z-index: 50; }
+
+        /* --- LOGICA DI ANIMAZIONE (Durata totale: 10 secondi) --- */
+        .play-animation .layer.barra,
+        .play-animation .layer.identity-encrypted,
+        .play-animation .layer.clues {
+            animation: flickerUI 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.sagoma {
+            animation: fadeSagoma 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.specchi,
+        .play-animation .layer.van,
+        .play-animation .layer.mic {
+            animation: fadeElements 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.domanda {
+            animation: fadeDomanda 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.arya {
+            animation: fadeArya 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.unlocked {
+            animation: flickerUnlocked 10s infinite linear forwards;
+        }
+
+        /* --- KEYFRAMES SINCRO CORRETTI --- */
+
+        /* 1. Prima Fase (0s - 3s): Flickering UI soft, poi rimane fissa */
+        @keyframes flickerUI {
+            0% { opacity: 0; }
+            2% { opacity: 1; }
+            4% { opacity: 0.1; }
+            7% { opacity: 0.9; }
+            10% { opacity: 0.3; }
+            13% { opacity: 1; }
+            16% { opacity: 0.4; }
+            20% { opacity: 1; }
+            25% { opacity: 0.9; }
+            30% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* 2. Fade in Sagoma (2s - 3s), resta visibile fino al cross-fade (5.5s - 7s) */
+        @keyframes fadeSagoma {
+            0% { opacity: 0; }
+            20% { opacity: 0; }
+            30% { opacity: 1; }
+            55% { opacity: 1; }
+            70% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* 3. Fade in Specchi, Van, Mic dopo la sagoma (3s - 4s) e rimangono */
+        @keyframes fadeElements {
+            0% { opacity: 0; }
+            30% { opacity: 0; }
+            40% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* 4. Domanda: Fade in (4s - 4.6s), Flickering (4.6s - 5.5s), Fade out veloce (5.5s - 6s) */
+        @keyframes fadeDomanda {
+            0% { opacity: 0; }
+            40% { opacity: 0; }
+            46% { opacity: 1; }
+            48% { opacity: 0.2; }
+            50% { opacity: 1; }
+            51% { opacity: 0.3; }
+            53% { opacity: 1; }
+            55% { opacity: 1; }
+            60% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* 5. Cross-fade Arya: entra mentre la sagoma scompare (5.5s - 7s) e rimane */
+        @keyframes fadeArya {
+            0% { opacity: 0; }
+            55% { opacity: 0; }
+            70% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* 6. Unlocked: Appare in flickering per 2 secondi (7s - 9s) e si fissa fino alla fine */
+        @keyframes flickerUnlocked {
+            0% { opacity: 0; }
+            70% { opacity: 0; }
+            72% { opacity: 1; }
+            74% { opacity: 0.2; }
+            76% { opacity: 1; }
+            79% { opacity: 0.3; }
+            82% { opacity: 1; }
+            85% { opacity: 0.5; }
+            87% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* Pannello di controllo esterno per il debug/anteprima */
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .btn {
+            background-color: #1e1e24;
+            color: #ffffff;
+            border: 1px solid #3a3a42;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #2a2a35;
+            border-color: #555565;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .timeline-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #ff3366;
+            width: 0%;
+            z-index: 999;
+        }
+        
+        .play-animation .timeline-indicator {
+            animation: progress 10s infinite linear forwards;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container Principale 9:16 -->
+    <div class="reel-viewport play-animation" id="viewport">
+        <!-- Indicatore della barra del tempo (opzionale, utile per vedere i 10s scorrere) -->
+        <div class="timeline-indicator"></div>
+
+        <!-- Livelli PNG ordinati per asse Z -->
+        <img src="assets/reveal-background.png" alt="Background" class="layer background">
+        
+        <img src="assets/reveal-barra.png" alt="Barra" class="layer barra">
+        <img src="assets/reveal-identityencrypted.png" alt="Identity Encrypted" class="layer identity-encrypted">
+        <img src="assets/reveal-3clues.png" alt="3 Clues" class="layer clues">
+        
+        <img src="assets/reveal-sagoma.png" alt="Sagoma" class="layer sagoma">
+        <img src="assets/reveal-arya.png" alt="Arya" class="layer arya">
+        
+        <img src="assets/reveal-specchi.png" alt="Specchi" class="layer specchi">
+        <img src="assets/reveal-van.png" alt="Van" class="layer van">
+        <img src="assets/reveal-mic.png" alt="Mic" class="layer mic">
+        
+        <img src="assets/reveal-domanda.png" alt="Domanda" class="layer domanda">
+        <img src="assets/reveal-unlocked.png" alt="Unlocked" class="layer unlocked">
+    </div>
+
+    <!-- Pulsanti di controllo per comodità su GitHub / Browser -->
+    <div class="controls">
+        <button class="btn" onclick="restartAnimation()">🔄 Riavvia Loop</button>
+        <button class="btn" id="pauseBtn" onclick="toggleAnimation()">⏸️ Pausa / Riprendi</button>
+    </div>
+
+    <script>
+        const viewport = document.getElementById('viewport');
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        function restartAnimation() {
+            viewport.classList.remove('play-animation');
+            void viewport.offsetWidth; // Trigger del reflow CSS per resettare le animazioni
+            viewport.classList.add('play-animation');
+            if (viewport.style.animationPlayState === 'paused') {
+                resume();
+            }
+        }
+
+        function toggleAnimation() {
+            const layers = document.querySelectorAll('.layer, .timeline-indicator');
+            if (viewport.classList.contains('play-animation') && pauseBtn.innerText.includes('⏸️')) {
+                layers.forEach(l => l.style.animationPlayState = 'paused');
+                pauseBtn.innerText = '▶️ Riprendi';
+            } else {
+                layers.forEach(l => l.style.animationPlayState = 'running');
+                pauseBtn.innerText = '⏸️ Pausa';
+                if (!viewport.classList.contains('play-animation')) {
+                    viewport.classList.add('play-animation');
+                }
+            }
+        }
+        
+        function resume() {
+            const layers = document.querySelectorAll('.layer, .timeline-indicator');
+            layers.forEach(l => l.style.animationPlayState = 'running');
+            pauseBtn.innerText = '⏸️ Pausa';
+        }
+    </script>
+</body>
+</html>
