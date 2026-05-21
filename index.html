@@ -44,7 +44,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Assicura il riempimento perfetto del frame 9:16 */
+            object-fit: cover;
             pointer-events: none;
             opacity: 0;
         }
@@ -67,7 +67,7 @@
         .layer.domanda { z-index: 40; }
         .layer.unlocked { z-index: 50; }
 
-        /* --- LOGICA DI ANIMAZIONE (Durata totale: 10 secondi) --- */
+        /* --- LOGICA DI ANIMAZIONE --- */
         .play-animation .layer.barra,
         .play-animation .layer.identity-encrypted,
         .play-animation .layer.clues {
@@ -79,9 +79,12 @@
         }
 
         .play-animation .layer.specchi,
-        .play-animation .layer.van,
         .play-animation .layer.mic {
             animation: fadeElements 10s infinite linear forwards;
+        }
+
+        .play-animation .layer.van {
+            animation: fadeVan 10s infinite linear forwards;
         }
 
         .play-animation .layer.domanda {
@@ -96,9 +99,9 @@
             animation: flickerUnlocked 10s infinite linear forwards;
         }
 
-        /* --- KEYFRAMES SINCRO CORRETTI --- */
+        /* --- KEYFRAMES --- */
 
-        /* 1. Prima Fase (0s - 3s): Flickering UI soft, poi rimane fissa */
+        /* 1. Prima Fase (0s - 3s): Flickering UI, fissa fino a 7s, poi scompare */
         @keyframes flickerUI {
             0% { opacity: 0; }
             2% { opacity: 1; }
@@ -110,10 +113,12 @@
             20% { opacity: 1; }
             25% { opacity: 0.9; }
             30% { opacity: 1; }
-            100% { opacity: 1; }
+            69% { opacity: 1; }
+            70% { opacity: 0; }
+            100% { opacity: 0; }
         }
 
-        /* 2. Fade in Sagoma (2s - 3s), resta visibile fino al cross-fade (5.5s - 7s) */
+        /* 2. Fade in Sagoma */
         @keyframes fadeSagoma {
             0% { opacity: 0; }
             20% { opacity: 0; }
@@ -123,7 +128,7 @@
             100% { opacity: 0; }
         }
 
-        /* 3. Fade in Specchi, Van, Mic dopo la sagoma (3s - 4s) e rimangono */
+        /* 3. Fade in Specchi e Mic (3s - 4s) */
         @keyframes fadeElements {
             0% { opacity: 0; }
             30% { opacity: 0; }
@@ -131,7 +136,15 @@
             100% { opacity: 1; }
         }
 
-        /* 4. Domanda: Fade in (4s - 4.6s), Flickering (4.6s - 5.5s), Fade out veloce (5.5s - 6s) */
+        /* 4. Il Van entra solo alla fine (8s - 9s) */
+        @keyframes fadeVan {
+            0% { opacity: 0; }
+            80% { opacity: 0; }
+            90% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        /* 5. Domanda */
         @keyframes fadeDomanda {
             0% { opacity: 0; }
             40% { opacity: 0; }
@@ -145,7 +158,7 @@
             100% { opacity: 0; }
         }
 
-        /* 5. Cross-fade Arya: entra mentre la sagoma scompare (5.5s - 7s) e rimane */
+        /* 6. Cross-fade Arya */
         @keyframes fadeArya {
             0% { opacity: 0; }
             55% { opacity: 0; }
@@ -153,7 +166,7 @@
             100% { opacity: 1; }
         }
 
-        /* 6. Unlocked: Appare in flickering per 2 secondi (7s - 9s) e si fissa fino alla fine */
+        /* 7. Unlocked */
         @keyframes flickerUnlocked {
             0% { opacity: 0; }
             70% { opacity: 0; }
@@ -221,10 +234,8 @@
 
     <!-- Container Principale 9:16 -->
     <div class="reel-viewport play-animation" id="viewport">
-        <!-- Indicatore della barra del tempo (opzionale, utile per vedere i 10s scorrere) -->
         <div class="timeline-indicator"></div>
 
-        <!-- Livelli PNG ordinati per asse Z -->
         <img src="assets/reveal-background.png" alt="Background" class="layer background">
         
         <img src="assets/reveal-barra.png" alt="Barra" class="layer barra">
@@ -242,7 +253,7 @@
         <img src="assets/reveal-unlocked.png" alt="Unlocked" class="layer unlocked">
     </div>
 
-    <!-- Pulsanti di controllo per comodità su GitHub / Browser -->
+    <!-- Pulsanti di controllo -->
     <div class="controls">
         <button class="btn" onclick="restartAnimation()">🔄 Riavvia Loop</button>
         <button class="btn" id="pauseBtn" onclick="toggleAnimation()">⏸️ Pausa / Riprendi</button>
@@ -254,7 +265,7 @@
 
         function restartAnimation() {
             viewport.classList.remove('play-animation');
-            void viewport.offsetWidth; // Trigger del reflow CSS per resettare le animazioni
+            void viewport.offsetWidth; 
             viewport.classList.add('play-animation');
             if (viewport.style.animationPlayState === 'paused') {
                 resume();
